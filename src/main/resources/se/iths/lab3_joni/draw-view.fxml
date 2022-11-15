@@ -2,40 +2,31 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Button?>
 
-<?import javafx.scene.control.Label?>
-<VBox maxHeight="600.0" maxWidth="600.0" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="se.iths.lab3_joni.controller.DrawController">
+<VBox maxHeight="600.0" maxWidth="600.0" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.iths.lab3_joni.controller.DrawController">
     <MenuBar prefHeight="26.0" prefWidth="165.0" VBox.vgrow="NEVER">
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem onAction="#onNewClicked" mnemonicParsing="false" text="New"/>
-            <MenuItem onAction="#onSaveClicked" mnemonicParsing="false" text="Save"/>
-            <MenuItem onAction="#onQuitClicked" mnemonicParsing="false" text="Quit"/>
+            <MenuItem mnemonicParsing="false" onAction="#onNewClicked" text="New" />
+            <MenuItem mnemonicParsing="false" onAction="#onSaveClicked" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#onQuitClicked" text="Quit" />
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
-            <MenuItem mnemonicParsing="false" text="Undo"/>
+            <MenuItem onAction="#onUndoClicked" mnemonicParsing="false" text="Undo" />
         </Menu>
     </MenuBar>
     <HBox prefHeight="26.0" prefWidth="600.0">
-        <ColorPicker prefHeight="26.0" prefWidth="65.0"/>
-        <Button mnemonicParsing="false" prefWidth="105.0" text="Circle"/>
-        <Button mnemonicParsing="false" prefWidth="105.0" text="Triangle"/>
-        <Button mnemonicParsing="false" prefWidth="105.0" text="Square"/>
-        <Button mnemonicParsing="false" prefWidth="105.0" text="Line"/>
-        <Button onAction="#increaseBrushSize" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="+"/>
-        <Button onAction="#decreaseBrushSize" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="-"/>
+        <ColorPicker fx:id="colorPicker" prefHeight="26.0" prefWidth="65.0" />
+        <Button mnemonicParsing="false" onAction="#onCirclePicked" prefWidth="211.0" text="Circle" />
+        <Button mnemonicParsing="false" onAction="#onSquarePicked" prefWidth="211.0" text="Square" />
+        <Button mnemonicParsing="false" onAction="#increaseBrushSize" prefHeight="26.0" prefWidth="26.0" text="+" />
+        <Button mnemonicParsing="false" onAction="#decreaseBrushSize" prefHeight="26.0" prefWidth="26.0" text="-" />
         <Label fx:id="sizeLabel" prefHeight="28.0" prefWidth="58.0" text="MEDIUM">
             <padding>
-                <Insets left="5.0"/>
+                <Insets left="5.0" />
             </padding>
         </Label>
     </HBox>
-    <Canvas fx:id="canvas" onMouseClicked="#onCanvasClick" height="548.0" width="600.0"/>
+    <Canvas fx:id="canvas" height="548.0" onMouseClicked="#onCanvasClick" width="600.0" />
 </VBox>

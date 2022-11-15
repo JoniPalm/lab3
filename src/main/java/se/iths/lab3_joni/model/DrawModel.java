@@ -5,8 +5,7 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 public class DrawModel {
-    List<MyShape> drawing = new LinkedList<MyShape>();
+    public List<MyShape> shapes = new LinkedList<MyShape>();
     public BrushType brushType = BrushType.CIRCLE;
     public BrushSize brushSize = BrushSize.MEDIUM;
-    public Color color = Color.BLACK;
 }

@@ -11,7 +11,7 @@ public enum BrushSize {
 
     private final int size;
 
-    private BrushSize(final int size) {
+    BrushSize(final int size) {
         this.size = size;
     }
 
