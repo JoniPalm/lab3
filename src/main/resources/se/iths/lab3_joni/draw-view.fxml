@@ -15,9 +15,9 @@
       fx:controller="se.iths.lab3_joni.controller.DrawController">
     <MenuBar prefHeight="26.0" prefWidth="165.0" VBox.vgrow="NEVER">
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" text="New"/>
-            <MenuItem mnemonicParsing="false" text="Save"/>
-            <MenuItem mnemonicParsing="false" text="Quit"/>
+            <MenuItem onAction="#onNewClicked" mnemonicParsing="false" text="New"/>
+            <MenuItem onAction="#onSaveClicked" mnemonicParsing="false" text="Save"/>
+            <MenuItem onAction="#onQuitClicked" mnemonicParsing="false" text="Quit"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
             <MenuItem mnemonicParsing="false" text="Undo"/>
@@ -29,13 +29,13 @@
         <Button mnemonicParsing="false" prefWidth="105.0" text="Triangle"/>
         <Button mnemonicParsing="false" prefWidth="105.0" text="Square"/>
         <Button mnemonicParsing="false" prefWidth="105.0" text="Line"/>
-        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="+"/>
-        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="-"/>
-        <Label prefHeight="28.0" prefWidth="58.0" text="Label">
+        <Button onAction="#increaseBrushSize" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="+"/>
+        <Button onAction="#decreaseBrushSize" mnemonicParsing="false" prefHeight="26.0" prefWidth="26.0" text="-"/>
+        <Label fx:id="sizeLabel" prefHeight="28.0" prefWidth="58.0" text="MEDIUM">
             <padding>
-                <Insets left="6.0"/>
+                <Insets left="5.0"/>
             </padding>
         </Label>
     </HBox>
-    <Canvas height="548.0" width="600.0"/>
+    <Canvas fx:id="canvas" onMouseClicked="#onCanvasClick" height="548.0" width="600.0"/>
 </VBox>
