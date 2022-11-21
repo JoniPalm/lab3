@@ -9,7 +9,7 @@
     <MenuBar prefHeight="26.0" prefWidth="165.0" VBox.vgrow="NEVER">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#onNewClicked" text="New" />
-            <MenuItem mnemonicParsing="false" onAction="#onSaveClicked" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#onSaveClicked" text="Export" />
             <MenuItem mnemonicParsing="false" onAction="#onQuitClicked" text="Quit" />
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">

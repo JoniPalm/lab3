@@ -6,12 +6,20 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import se.iths.lab3_joni.model.BrushSize;
 import se.iths.lab3_joni.model.BrushType;
 import se.iths.lab3_joni.model.DrawModel;
 import se.iths.lab3_joni.model.MyShape;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class DrawController {
+    public Stage stage;
     public Label sizeLabel;
     public ColorPicker colorPicker;
     GraphicsContext context;
@@ -33,7 +41,16 @@ public class DrawController {
     }
 
     public void onSaveClicked() {
-        //Todo: Save svg.
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save as");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SVG", "*.svg"));
+        fileChooser.setInitialFileName("Vector Image");
+        File filePath = fileChooser.showSaveDialog(stage);
+        if (filePath != null) {
+            saveToFile(filePath);
+        }
     }
 
     public void onQuitClicked() {
@@ -76,9 +93,9 @@ public class DrawController {
 
         for (int i = 0; i < model.shapes.size(); i++) {
             MyShape shape = model.shapes.get(i);
-            float sx = shape.x;    // square position
+            float sx = shape.x;
             float sy = shape.y;
-            float sw = shape.size.getSize();    // and dimensions
+            float sw = shape.size.getSize();
             float sh = shape.size.getSize();;
 
 
@@ -99,8 +116,6 @@ public class DrawController {
             clearCanvas();
             model.shapes.forEach(this::reDraw);
         }
-
-
     }
 
     public void onIncreaseButtonPress() {
@@ -133,6 +148,51 @@ public class DrawController {
             model.setLargeBrush();
             sizeLabel.setText("LARGE");
         }
+    }
+
+    //svg
+    public void saveToFile(File file) {
+        StringBuilder output = new StringBuilder();
+        output.append("<svg version=\"1.1\" width=\"600\" height=\"400\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+        for (int i = 0; i < model.shapes.size(); i++) {
+            MyShape shape = model.shapes.get(i);
+            if (shape.brushType == BrushType.SQUARE) {
+                output.append("<rect x=\"").append(shape.x).append("\" y=\"").append(shape.y)
+                        .append("\" width=\"").append(shape.size.getSize())
+                        .append("\" height=\"").append(shape.size.getSize())
+                        .append("\" stroke=\"").append(toHexString(shape.color))
+                        .append("\" fill=\"").append(toHexString(shape.color))
+                        .append("\" stroke-width=\"1\"")
+                        .append("/>\n");
+            } else if (shape.brushType == BrushType.CIRCLE) {
+                double radie = shape.size.getSize() / 2;
+                output.append("<circle cx=\"").append(shape.x).append("\" cy=\"").append(shape.y)
+                        .append("\" r=\"").append(radie)
+                        .append("\" stroke=\"").append(toHexString(shape.color))
+                        .append("\" fill=\"").append(toHexString(shape.color))
+                        .append("\" stroke-width=\"1\"")
+                        .append("/>\n");
+            }
+        }
+        output.append("</svg>");
+        try {
+            FileWriter writeFile = new FileWriter(file);
+            writeFile.write(output.toString());
+            writeFile.close();
+        } catch (IOException e) {
+            System.out.println("Something went wrong");
+            e.printStackTrace();
+        }
+    }
+
+    private String format(double val) {
+        String in = Integer.toHexString((int) Math.round(val * 255));
+        return in.length() == 1 ? "0" + in : in;
+    }
+
+    public String toHexString(Color value) {
+        return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue()) + format(value.getOpacity()))
+                .toUpperCase();
     }
 
     public void onCirclePicked() {
