@@ -13,7 +13,6 @@ import se.iths.lab3_joni.model.BrushSize;
 import se.iths.lab3_joni.model.BrushType;
 import se.iths.lab3_joni.model.DrawModel;
 import se.iths.lab3_joni.model.MyShape;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,15 +41,15 @@ public class DrawController {
 
     public void onSaveClicked() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save as");
+        fileChooser.setTitle("Export as");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SVG", "*.svg"));
         fileChooser.setInitialFileName("Vector Image");
         File filePath = fileChooser.showSaveDialog(stage);
-        if (filePath != null) {
+
+        if (filePath != null)
             saveToFile(filePath);
-        }
     }
 
     public void onQuitClicked() {
@@ -153,7 +152,7 @@ public class DrawController {
     //svg
     public void saveToFile(File file) {
         StringBuilder output = new StringBuilder();
-        output.append("<svg version=\"1.1\" width=\"600\" height=\"400\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+        output.append("<svg version=\"1.1\" width=\"600\" height=\"600\" xmlns=\"http://www.w3.org/2000/svg\">\n");
         for (int i = 0; i < model.shapes.size(); i++) {
             MyShape shape = model.shapes.get(i);
             if (shape.brushType == BrushType.SQUARE) {
@@ -180,7 +179,7 @@ public class DrawController {
             writeFile.write(output.toString());
             writeFile.close();
         } catch (IOException e) {
-            System.out.println("Something went wrong");
+            System.out.println("Something went wrong.");
             e.printStackTrace();
         }
     }
