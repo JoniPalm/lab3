@@ -1,6 +1,5 @@
 package se.iths.lab3_joni.controller;
 
-import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
@@ -95,7 +94,7 @@ public class DrawController {
             float sx = shape.x;
             float sy = shape.y;
             float sw = shape.size.getSize();
-            float sh = shape.size.getSize();;
+            float sh = shape.size.getSize();
 
 
             if (x >= sx &&        // right of the left edge AND
@@ -164,9 +163,9 @@ public class DrawController {
                         .append("\" stroke-width=\"1\"")
                         .append("/>\n");
             } else if (shape.brushType == BrushType.CIRCLE) {
-                double radie = shape.size.getSize() / 2;
+                double radius = shape.size.getSize() / 2;
                 output.append("<circle cx=\"").append(shape.x).append("\" cy=\"").append(shape.y)
-                        .append("\" r=\"").append(radie)
+                        .append("\" r=\"").append(radius)
                         .append("\" stroke=\"").append(toHexString(shape.color))
                         .append("\" fill=\"").append(toHexString(shape.color))
                         .append("\" stroke-width=\"1\"")
@@ -201,7 +200,7 @@ public class DrawController {
         model.setSquareBrush();
     }
 
-    public void onUndoClicked(ActionEvent actionEvent) {
+    public void onUndoClicked() {
         if (!model.shapes.isEmpty()) {
             model.shapes.remove(model.shapes.size() - 1);
 
