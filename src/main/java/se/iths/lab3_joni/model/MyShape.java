@@ -7,15 +7,14 @@ public class MyShape {
     public int y;
     public BrushSize size;
 
-    public BrushType shape;
+    public BrushType brushType;
     public Color color;
 
-    public MyShape(int x, int y, BrushSize size, BrushType shape, Color color) {
+    public MyShape(int x, int y, BrushSize size, BrushType brushType, Color color) {
         this.x = x;
         this.y = y;
         this.size = size;
-        this.shape = shape;
+        this.brushType = brushType;
         this.color = color;
-
     }
 }

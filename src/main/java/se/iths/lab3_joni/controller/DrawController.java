@@ -3,7 +3,6 @@ package se.iths.lab3_joni.controller;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -41,67 +40,106 @@ public class DrawController {
         System.exit(0);
     }
 
-    public void onCanvasClick(MouseEvent mouseEvent) {
-        context.setFill(colorPicker.getValue());
-        switch (model.brushType) {
-            case CIRCLE -> {
-                context.fillOval(mouseEvent.getX() - (model.brushSize.getSize() / 2),
-                        mouseEvent.getY() - (model.brushSize.getSize() / 2),
-                        model.brushSize.getSize(),
-                        model.brushSize.getSize());
+    public void onCanvasClick(MouseEvent event) {
+        MyShape myShape;
 
-                MyShape shape = new MyShape((int) (mouseEvent.getX()), (int) (mouseEvent.getY()), model.brushSize, BrushType.CIRCLE, colorPicker.getValue());
-                model.shapes.add(shape);
-            }
-            case SQUARE -> {
-                context.fillRect(mouseEvent.getX() - (model.brushSize.getSize() / 2),
-                        mouseEvent.getY() - (model.brushSize.getSize() / 2),
-                        model.brushSize.getSize(),
-                        model.brushSize.getSize());
+        if (event.isControlDown()) {
+            if (!model.shapes.isEmpty())
+                checkListForHits(event.getX(), event.getY());
+        } else {
+            context.setFill(colorPicker.getValue());
+            switch (model.brushType) {
+                case CIRCLE -> {
+                    context.fillOval(event.getX() - (model.brushSize.getSize() / 2),
+                            event.getY() - (model.brushSize.getSize() / 2),
+                            model.brushSize.getSize(),
+                            model.brushSize.getSize());
 
-                MyShape shape = new MyShape((int) (mouseEvent.getX()), (int) (mouseEvent.getY()), model.brushSize, BrushType.SQUARE, colorPicker.getValue());
-                model.shapes.add(shape);
+                    myShape = new MyShape((int) (event.getX()), (int) (event.getY()), model.brushSize, BrushType.CIRCLE, colorPicker.getValue());
+                    model.shapes.add(myShape);
+                }
+                case SQUARE -> {
+                    context.fillRect(event.getX() - (model.brushSize.getSize() / 2),
+                            event.getY() - (model.brushSize.getSize() / 2),
+                            model.brushSize.getSize(),
+                            model.brushSize.getSize());
+
+                    myShape = new MyShape((int) (event.getX()), (int) (event.getY()), model.brushSize, BrushType.SQUARE, colorPicker.getValue());
+                    model.shapes.add(myShape);
+                }
             }
         }
     }
 
-    public void increaseBrushSize() {
+    private void checkListForHits(double x, double y) {
+        boolean hit = false;
+
+        for (int i = 0; i < model.shapes.size(); i++) {
+            MyShape shape = model.shapes.get(i);
+            float sx = shape.x;    // square position
+            float sy = shape.y;
+            float sw = shape.size.getSize();    // and dimensions
+            float sh = shape.size.getSize();;
+
+
+            if (x >= sx &&        // right of the left edge AND
+                    x <= sx + sw &&   // left of the right edge AND
+                    y >= sy &&        // below the top AND
+                    y <= sy + sh) {   // above the bottom
+
+                MyShape newShape = new MyShape(shape.x, shape.y, model.brushSize, model.brushType, colorPicker.getValue());
+                model.shapes.remove(shape);
+                model.shapes.add(newShape);
+                hit = true;
+                break;
+            }
+        }
+
+        if (hit) {
+            clearCanvas();
+            model.shapes.forEach(this::reDraw);
+        }
+
+
+    }
+
+    public void onIncreaseButtonPress() {
         if (model.brushSize == BrushSize.LARGE) {
-            model.brushSize = BrushSize.HUGE;
+            model.setHugeBrush();
             sizeLabel.setText("HUGE");
         } else if (model.brushSize == BrushSize.MEDIUM) {
-            model.brushSize = BrushSize.LARGE;
+            model.setLargeBrush();
             sizeLabel.setText("LARGE");
         } else if (model.brushSize == BrushSize.SMALL) {
-            model.brushSize = BrushSize.MEDIUM;
+            model.setMediumBrush();
             sizeLabel.setText("MEDIUM");
         } else if (model.brushSize == BrushSize.TINY) {
-            model.brushSize = BrushSize.SMALL;
+            model.setSmallBrush();
             sizeLabel.setText("SMALL");
         }
     }
 
-    public void decreaseBrushSize() {
-            if (model.brushSize == BrushSize.SMALL) {
-                model.brushSize = BrushSize.TINY;
-                sizeLabel.setText("TINY");
-            } else if (model.brushSize == BrushSize.MEDIUM) {
-                model.brushSize = BrushSize.SMALL;
-                sizeLabel.setText("SMALL");
-            } else if (model.brushSize == BrushSize.LARGE) {
-                model.brushSize = BrushSize.MEDIUM;
-                sizeLabel.setText("MEDIUM");
-            } else if (model.brushSize == BrushSize.HUGE) {
-                model.brushSize = BrushSize.LARGE;
-                sizeLabel.setText("LARGE");
+    public void onDecreaseButtonPress() {
+        if (model.brushSize == BrushSize.SMALL) {
+            model.setTinyBrush();
+            sizeLabel.setText("TINY");
+        } else if (model.brushSize == BrushSize.MEDIUM) {
+            model.setSmallBrush();
+            sizeLabel.setText("SMALL");
+        } else if (model.brushSize == BrushSize.LARGE) {
+            model.setMediumBrush();
+            sizeLabel.setText("MEDIUM");
+        } else if (model.brushSize == BrushSize.HUGE) {
+            model.setLargeBrush();
+            sizeLabel.setText("LARGE");
         }
     }
 
     public void onCirclePicked() {
-        model.brushType = BrushType.CIRCLE;
+        model.setCircleBrush();
     }
     public void onSquarePicked() {
-        model.brushType = BrushType.SQUARE;
+        model.setSquareBrush();
     }
 
     public void onUndoClicked(ActionEvent actionEvent) {
@@ -111,13 +149,13 @@ public class DrawController {
             clearCanvas();
 
             if (!model.shapes.isEmpty())
-                model.shapes.forEach(shape -> reDraw(shape));
+                model.shapes.forEach(this::reDraw);
         }
     }
 
     private void reDraw(MyShape shape) {
         context.setFill(shape.color);
-        switch(shape.shape) {
+        switch (shape.brushType) {
             case CIRCLE -> context.fillOval(shape.x - (shape.size.getSize() / 2),
                     shape.y - (shape.size.getSize() / 2),
                     shape.size.getSize(),
